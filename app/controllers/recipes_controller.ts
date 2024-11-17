@@ -4,7 +4,6 @@ import { createIngredientValidator } from '#validators/ingredient';
 import { createRecipeValidator } from '#validators/recipe';
 import { HttpContext } from '@adonisjs/core/http';
 
-const apiKey = 'e3de9d1c35ed4c3f91bc95f00bfcb0f1';
 
 export default class RecipesController{
 

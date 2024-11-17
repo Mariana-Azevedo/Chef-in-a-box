@@ -7,26 +7,31 @@
       </div>
       <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
   @login.form({
-      action: route('users.store'),
+      action: route('auth.store'),
       method: 'POST',
+      class: 'space-y-6'
     }) 
     <div class="form-control">
-            <label class="label">
-              <span class="label-text">Email</span> 
-            </label>
-            @!login.emailInput()
-          </div>
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">Senha</span>
-            </label>
-            @!login.senha()
+      <label class="label">
+        <span class="label-text">Email</span>
+      </label>
+    </div>
+    <div class="form-control">
+      @!login.emailInput()
+    </div>
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">Senha</span>
+      </label>
+      @!login.senha()
+    </div>
             <label class="label">
               <a href="#" class="label-text-alt link link-hover">Esqueceu sua senha?</a>
             </label>
           </div>
           <div class="form-control mt-6">
-            <button class="btn btn-primary">Login</button>
+            {{--  <button class="btn btn-primary">Login</button>  --}}
+            @!button({ label: 'Login', colorClass: 'btn-primary' })
           </div>         
           <a class="link link-primary" href="{{ route('users.create') }}"> Não tem conta? Criar conta</a>
         </form>
