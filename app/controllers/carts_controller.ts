@@ -25,26 +25,31 @@ export default class CartsController {
           total + ingredient.price * ingredient.$extras.pivot_quantity,
         0
       );
+      const cartItem = cart.findIndex((item: { id: number; })=>item.id == recipe.id)
+      
+      totalPrice += recipeTotal * cart[cartItem].quantity * 1.06;
 
-      totalPrice += recipeTotal;
+      if(cart[cartItem].id == recipe.id){
 
-      recipesCart.push({
-        id: recipe.id,
-        title: recipe.title,
-        description: recipe.description,
-        instructions: recipe.instructions,
-        cuisine: recipe.cuisine,
-        image: recipe.image,
-        totalPrice: recipeTotal,
-        ingredients: recipe.ingredients.map((ingredient) => ({
-          id: ingredient.id,
-          name: ingredient.name,
-          unit: ingredient.unit,
-          price: ingredient.price,
-          image: ingredient.image,
-          quantity: ingredient.$extras.pivot_quantity,
-        })),
-      });
+        recipesCart.push({
+          id: recipe.id,
+          title: recipe.title,
+          description: recipe.description,
+          instructions: recipe.instructions,
+          cuisine: recipe.cuisine,
+          image: recipe.image,
+          totalPrice: recipeTotal,
+          quantity: cart[cartItem].quantity,
+          ingredients: recipe.ingredients.map((ingredient) => ({
+            id: ingredient.id,
+            name: ingredient.name,
+            unit: ingredient.unit,
+            price: ingredient.price,
+            image: ingredient.image,
+            quantity: ingredient.$extras.pivot_quantity,
+          })),
+        });
+      }
     }
 
     return view.render('pages/products/cart.edge', { recipesCart, totalPrice });
@@ -72,43 +77,54 @@ export default class CartsController {
       .redirect().toRoute('cart.index')
   }
 
-  public async payment({request,response}: HttpContext) {
-    const cart = JSON.parse(request.cookie('cart', JSON.stringify([]))) as Array<{ id: number; quantity: number }> 
-
+  public async payment({ request, response }: HttpContext) {
+    const cart = JSON.parse(request.cookie('cart', JSON.stringify([]))) as Array<{ id: number; quantity: number }>;
+    
     const recipes = await Recipe.query()
-    .whereIn(
-      'id',
-      cart.map((item) => item.id)
-    )
-    .preload('ingredients', (ingredientQuery) => {
-      ingredientQuery.select('id', 'name' ,'stock').pivotColumns(['quantity']);
-    })
-    .exec()
-    
-    
-    await db.transaction(async (trx) => {     
-      for(const recipe in recipes){
-
-        const cartItem = cart.findIndex((item: { id: number; })=>item.id == recipes[recipe].id)
-        for(const ingredient of recipes[recipe].ingredients){
-
-          if(ingredient.stock < ingredient.$extras.pivot_quantity * cart[cartItem].quantity ){
-
-          throw new Error(ingredient.name + 'está esgotado no estoque')
-        }
-
-          ingredient.stock -= ingredient.$extras.pivot_quantity * cart[cartItem].quantity
-        
-          await Ingredient.query({ client: trx }).where('id', ingredient.id).update({ stock: ingredient.stock})
+      .whereIn(
+        'id',
+        cart.map((item) => item.id)
+      )
+      .preload('ingredients', (ingredientQuery) => {
+        ingredientQuery.select('id', 'name', 'stock').pivotColumns(['quantity']);
+      });
+  
+    let errorOccurred = false;
+    let errorMessage = '';
+  
+    await db.transaction(async (trx) => {
+      for (const recipe of recipes) {
+        const cartItemIndex = cart.findIndex((item) => item.id === recipe.id);
+  
+        for (const ingredient of recipe.ingredients) {
+          // Verifica se o estoque é insuficiente
+          if (ingredient.stock < ingredient.$extras.pivot_quantity * cart[cartItemIndex].quantity) {
+            errorOccurred = true;
+            errorMessage = ingredient.name + ' está esgotado.';
+            // Lança um erro para reverter a transação e sair do loop
+            throw new Error('Ingredient out of stock');
+          }
+  
+          // Atualiza o estoque do ingrediente
+          ingredient.stock -= ingredient.$extras.pivot_quantity * cart[cartItemIndex].quantity;
+          await Ingredient.query({ client: trx }).where('id', ingredient.id).update({ stock: ingredient.stock });
         }
       }
-
-    })
-    
+    }).catch(() => {
+      // A transação falhou, não faremos nada aqui, mas temos variáveis indicando o erro
+    });
+  
+    // Caso tenha ocorrido erro, retorne a mensagem de erro
+    if (errorOccurred) {
+      return response.status(500).json({ error: errorMessage });
+    }
+  
+    // Se chegou aqui, significa que não ocorreu erro, pode redirecionar
     return response
-    .cookie('cart', JSON.stringify([]))
-    .redirect().toRoute('recipes.index')
+      .cookie('cart', JSON.stringify([]))
+      .redirect().toRoute('recipes.index');
   }
+  
 }
 
 

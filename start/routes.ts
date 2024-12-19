@@ -51,7 +51,7 @@ router
   .prefix('recipes')
 
   router.get('/stock',[RecipesController, 'stock']).as('recipes.stock' ).use(middleware.auth());
-
+  router.post('/stock/update',[RecipesController, 'updateStock']).as('recipes.updateStock' ).use(middleware.auth());
 
   router.get('/home', ({view}) => {
     return view.render('pages/home.edge')

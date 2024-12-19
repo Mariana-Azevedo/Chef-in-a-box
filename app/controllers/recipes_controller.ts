@@ -181,35 +181,33 @@ export default class RecipesController{
     }
   }
 
-  public async updateStock({request, response}: HttpContext) {
+  public async updateStock({ request, response }: HttpContext) {
     try {
-      // Recebe a lista de ingredientes do corpo da requisição
-      const ingredientsToUpdate = request.input('ingredients') as Array<{ id: number; stock: number }>
-
+      const ingredientsJson = request.input('ingredients') // Isso é uma string
+      const ingredientsToUpdate = JSON.parse(ingredientsJson) as Array<{ id: number; stock: number }>
+  
       if (!Array.isArray(ingredientsToUpdate)) {
         return {
           status: 'error',
           message: 'A lista de ingredientes deve ser um array',
         }
       }
-
-      // Atualiza cada ingrediente no banco de dados
+  
       for (const ingredient of ingredientsToUpdate) {
         if (!ingredient.id || ingredient.stock === undefined) {
           return {
             status: 'error',
-            message: 'Cada ingrediente deve ter um id e uma estoque',
+            message: 'Cada ingrediente deve ter um id e um estoque',
           }
         }
-
+  
         await Ingredient.query()
           .where('id', ingredient.id)
           .update({ stock: ingredient.stock })
       }
-
-
-    return response.redirect().toRoute('recipes.stock')
-      
+  
+      return response.redirect().toRoute('recipes.stock')
+  
     } catch (error) {
       console.error('Erro ao atualizar o estoque:', error)
       return {
@@ -217,8 +215,8 @@ export default class RecipesController{
         message: 'Erro ao atualizar o estoque. Verifique os logs do servidor.',
       }
     }
-
   }
+  
 }
 
   

@@ -31,9 +31,9 @@
           <td></td>
           <td>{{ ingredient.name }}</td>
           <td>R${{ ingredient.price }}</td>
-          <td>{{ ingredient.quantity }} {{ ingredient.unit }}</td>
+          <td>{{ recipe.quantity * ingredient.quantity }} {{ ingredient.unit }}</td>
 
-          <td>R$ {{ ingredient.price * ingredient.quantity }}</td>
+          <td>R$ {{ ingredient.price * ingredient.quantity * recipe.quantity}}</td>
         </tr>
         @end
         @end

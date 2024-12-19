@@ -13,7 +13,6 @@
               <th>Preço</th>
               <th>Unidade</th>
               <th>Estoque</th>
-
             </tr>
           </thead>
           <tbody>
@@ -35,7 +34,11 @@
               <td>R$ {{ ingredient.price.toFixed(2) }}</td>
               <td>{{ ingredient.unit }}</td>
               <td>
-                <input type="number" placeholder="Qtd" class="input max-w-24 input-bordered input-accent " />
+                <div class="flex items-center space-x-2">
+                  <button class="btn btn-outline btn-error" type="button" onclick="updateStock('decrement', {{ ingredient.id }})">-</button>
+                  <span id="quantity-{{ ingredient.id }}" class="font-bold text-lg">{{ ingredient.stock }}</span>
+                  <button class="btn btn-outline btn-success" type="button" onclick="updateStock('increment', {{ ingredient.id }})">+</button>
+                </div>
               </td>
             </tr>
             @endeach
@@ -44,9 +47,56 @@
       </div>
     </div>
   </div>
-
 </div>
-<div class="flex justify-center">
-  <a class="btn m-8 min-w-80 btn-accent">Salvar</a></div>
 
+<div class="flex justify-center">
+  <form method="POST" action="{{ route('recipes.updateStock') }}" id="updateStockForm">
+    <input type="hidden" name="ingredients" id="ingredientsInput" value="">
+    <button type="submit" class="btn m-8 min-w-80 btn-accent">Salvar</button>
+  </form>
+</div>
+
+<script>
+  document.getElementById('updateStockForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Previne o envio padrão do formulário
+
+    const ingredientsData = [];
+    const quantities = document.querySelectorAll('[id^="quantity-"]'); 
+
+    quantities.forEach(quantityElement => {
+      const ingredientId = quantityElement.id.replace('quantity-', '');
+      const stockValue = parseFloat(quantityElement.textContent);
+      ingredientsData.push({ id: Number(ingredientId), stock: stockValue });
+    });
+
+    // Define os valores no input oculto
+    document.getElementById('ingredientsInput').value = JSON.stringify(ingredientsData);
+
+    // Agora envia o formulário
+    this.submit();
+  });
+
+  function updateStock(action, ingredientId) {
+    const quantityElement = document.getElementById(`quantity-${ingredientId}`);
+
+    if (!quantityElement) {
+      console.error('Elemento de quantidade não encontrado para o ID:', ingredientId);
+      return;
+    }
+
+    let currentStock = parseFloat(quantityElement.textContent);
+
+    if (action === 'increment') {
+      currentStock++;
+    } else if (action === 'decrement' && currentStock > 0) {
+      currentStock--;
+    } else {
+      console.warn('Ação inválida ou quantidade menor que zero');
+      return;
+    }
+
+    // Atualiza no DOM apenas
+    quantityElement.textContent = currentStock;
+  }
+</script>
 @end
