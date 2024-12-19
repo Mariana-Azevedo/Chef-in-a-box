@@ -52,18 +52,18 @@
       </tfoot>
     </table>
 
-    {{--  <form method="POST" action="{{ route('cart.update') }}?_method=PUT">
+    {{-- <form method="POST" action="{{ route('cart.update') }}?_method=PUT">
       <button type="submit" class="btn btn-outline btn-accent">Atualizar carrinho</button>
-    </form>  --}}
+    </form> --}}
     <form method="POST" action="{{ route('cart.destroy') }}?_method=PUT">
       <div class="flex mt-6">
         <button class="btn btn-primary">Apagar</button>
       </div>
-    </form> 
-    
+    </form>
 
 
-    {{--  <button class="btn" onclick="my_modal_1.showModal()">open modal</button>
+
+    {{-- <button class="btn" onclick="my_modal_1.showModal()">open modal</button>
     <dialog id="my_modal_1" class="modal">
       <div class="modal-box">
         <p class="flex justify-center py-4">Você quer remover esse produto?</p>
@@ -75,7 +75,7 @@
         </div>
       </div>
     </dialog>
-      --}}
+    --}}
   </div>
 
   <!-- Seção do Resumo da Compra -->
@@ -101,11 +101,24 @@
         </div>
         <form method="POST" action="{{ route('cart.payment') }}">
           <div class="card-actions justify-end min-w-80">
-            <button type="submit" class="btn btn-success mt-6 min-w-full row">Finalizar a compra</button>
+            <button class="btn btn-success mt-6 min-w-full row" onclick="my_modal_5.showModal()">Finalizar a
+              compra</button>
+            <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
+              <div class="modal-box">
+                <p class="py-4">Compra realizada com sucesso!</p>
+                <div class="modal-action">
+                  <form method="dialog">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
           </div>
         </form>
-        
-       
+
+        <!-- Open the modal using ID.showModal() method -->
+
       </div>
     </div>
   </div>

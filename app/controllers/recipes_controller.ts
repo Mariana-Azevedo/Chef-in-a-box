@@ -6,6 +6,7 @@ import { HttpContext } from '@adonisjs/core/http';
 import db from '@adonisjs/lucid/services/db'
 
 
+
 export default class RecipesController{
 
   public async index({ view, request }: HttpContext) {
@@ -135,7 +136,7 @@ export default class RecipesController{
   }
 
   async create({ view }: HttpContext) {
-    console.log("AAAAAAAAAAAAAA")
+   
     return view.render('pages/createRecipe')
 
   }
@@ -168,7 +169,6 @@ export default class RecipesController{
 
   public async stock({ view }: HttpContext) {
 
-    console.log("aaaaa")
     try {
       // Busca todos os ingredientes do banco de dados
       const ingredients = await Ingredient.all()
@@ -182,20 +182,23 @@ export default class RecipesController{
   }
 
   public async updateStock({ request, response }: HttpContext) {
+  public async updateStock({ request, response }: HttpContext) {
     try {
       const ingredientsJson = request.input('ingredients') // Isso é uma string
       const ingredientsToUpdate = JSON.parse(ingredientsJson) as Array<{ id: number; stock: number }>
   
       if (!Array.isArray(ingredientsToUpdate)) {
-        return {
+        return response.status(400).json({
           status: 'error',
           message: 'A lista de ingredientes deve ser um array',
-        }
+        })
       }
   
       for (const ingredient of ingredientsToUpdate) {
+        console.log('Recebido do front-end:', ingredient)
+        // Verifica se o objeto tem id e stock
         if (!ingredient.id || ingredient.stock === undefined) {
-          return {
+          return response.status(400).json({
             status: 'error',
             message: 'Cada ingrediente deve ter um id e um estoque',
           }

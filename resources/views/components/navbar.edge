@@ -12,8 +12,8 @@
         <li><a href="{{ route('recipes.index')}}"> Receitas </a></li>
         @if(auth.user && auth.user.admin)
         <li><a href="{{ route('recipes.create') }}">Criar receitas</a></li>
-        @end  
         <li><a href="{{ route('recipes.stock')}}">Estoque </a></li>
+        @end  
         {{-- <li><a href="{{ route('users.admin')}}">Admin</a></li> --}}
       </ul>
     </div>
@@ -50,7 +50,6 @@
             Perfil
           </a>
         </li>
-        <li><a>Settings</a></li>
         <li><a href="{{ route('auth.destroy') }}" onclick="handleLogout(event)">Logout</a></li>
       </ul>
     </div>

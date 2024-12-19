@@ -8,30 +8,14 @@
       <p class="py-6 text-xl">
         Já imaginou preparar pratos deliciosos sem ter que planejar, medir ou correr atrás dos ingredientes certos? No Chef in a Box, você escolhe a receita que deseja e nós entregamos tudo na medida exata, pronto para você cozinhar sem complicação.
       </p>
-      <button class="btn btn-primary">Receitas</button>
+      <a href="{{ route('recipes.index')}}" class="btn btn-primary">Receitas</a>
     </div>
     <img
       src="https://cdn.sellerapp.com/img/website-v2/api-pages/walmart_product_api/optimize-your-inventory-process-with-walmart-product-api.svg"
       class="h-auto max-h-screen ml-auto" />
   </div>
 
-  <!-- Swiper Carrossel -->
-  <div class="my-12">
-    <div class="swiper w-full h-[300px]">
-      @each(recipe in recipes)
-      <div class="swiper-wrapper">
-        <div class="swiper-slide bg-primary text-white flex items-center justify-center">
-          <img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="w-full h-48 object-cover" />
-        </div>
-        
-      </div>
-      @else
-        <p>AAA</p>
-      @end
-      <div class="swiper-button-next"></div>
-      <div class="swiper-button-prev"></div>
-    </div>
-  </div>
+
 
   <!-- Hero Section -->
   <div class="hero bg-secondary min-h-screen">
@@ -46,6 +30,24 @@
       </div>
     </div>
   </div>  
+
+    <!-- Swiper Carrossel -->
+    <div class="my-12">
+      <div class="swiper w-full h-[500px]">
+        @each(recipe in recipes)
+        <div class="swiper-wrapper">
+          <div class="swiper-slide bg-primary text-white flex items-center justify-center">
+            <img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="w-full h-48 object-cover" />
+          </div>
+          
+        </div>
+        @else
+          <p>AAA</p>
+        @end
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
+    </div>
 
   <!-- Cards Section -->
   <div class="grid grid-cols-4 ml-12">

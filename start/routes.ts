@@ -8,6 +8,7 @@ const CartsController = () => import('#controllers/carts_controller')
 
 
 router.on('/').render('pages/home/home').as('home.show').use(middleware.silent());//criar controller
+// router.get('/new', [RecipesController, 'create']).as('recipes.create').use([middleware.auth(), middleware.admin()]);
 
 router.get('/login', [AuthController, 'create']).as('auth.create')
 router.post('/login', [AuthController, 'store']).as('auth.store')
@@ -50,12 +51,13 @@ router
   })
   .prefix('recipes')
 
-  router.get('/stock',[RecipesController, 'stock']).as('recipes.stock' ).use(middleware.auth());
-  router.post('/stock/update',[RecipesController, 'updateStock']).as('recipes.updateStock' ).use(middleware.auth());
+  router.get('/stock',[RecipesController, 'stock']).as('recipes.stock').use([middleware.auth(), middleware.admin()]);
+  router.post('/stock/update',[RecipesController, 'updateStock']).as('recipes.updateStock').use([middleware.auth(), middleware.admin()]);
 
-  router.get('/home', ({view}) => {
-    return view.render('pages/home.edge')
-  })
+
+  // router.get('/home', ({view}) => {
+  //   return view.render('pages/home.edge')
+  // })
 
   // router.get('/permissoes', ({view}) => {
   //   return view.render('pages/user/permissions.edge')
