@@ -181,7 +181,7 @@ export default class RecipesController{
     }
   }
 
-  public async updateStock({ request, response }: HttpContext) {
+
   public async updateStock({ request, response }: HttpContext) {
     try {
       const ingredientsJson = request.input('ingredients') // Isso é uma string
@@ -201,7 +201,7 @@ export default class RecipesController{
           return response.status(400).json({
             status: 'error',
             message: 'Cada ingrediente deve ter um id e um estoque',
-          }
+          })
         }
   
         await Ingredient.query()
