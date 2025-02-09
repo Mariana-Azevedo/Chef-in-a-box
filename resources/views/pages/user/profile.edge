@@ -1,0 +1,86 @@
+@layouts.app()
+@!navbar()
+<div class="card bg-base-100 w-96 shadow-xl w-full h-80">
+    <div class="card-body ">
+        <h2 class="card-title">Bem vindo ao seu perfil {{ returnUser.fullName }}!</h2>
+        <p>Aqui você pode visualizar as informações do seu perfil e editá-las, se desejar.</p>
+
+        <div class="overflow-x-auto">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Senha</th>
+                        <th>Editar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="flex items-center gap-3">
+                                {{ returnUser.fullName }}
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                {{ returnUser.email }}
+                            </div>
+                        </td>
+                        <td>....</td>
+                        <th>
+                            <!-- Botão para abrir o modal -->
+                            <label for="edit-modal" class="btn">Editar</label>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal -->
+        <input type="checkbox" id="edit-modal" class="modal-toggle" />
+        <div class="modal">
+            <div class="modal-box">
+                <h3 class="font-bold text-lg">Editar Informações</h3>
+                <p class="py-4">Atualize seus dados abaixo:</p>
+                <form action="/users/{{ returnUser.id }}" method="POST" class="space-y-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Nome</span>
+                        </label>
+                        <input type="text" name="fullName" placeholder="Seu Nome" value="{{ returnUser.fullName }}"
+                            class="input input-bordered" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Email</span>
+                        </label>
+                        <input type="email" name="email" placeholder="Seu Email" value="{{ returnUser.email }}"
+                            class="input input-bordered" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Senha</span>
+                        </label>
+                        <input type="password" name="password" placeholder="Digite sua nova senha"
+                            class="input input-bordered" />
+                    </div>
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Confirmar Senha</span>
+                        </label>
+                        <input type="password" name="password_confirmation" placeholder="Confirme sua nova senha"
+                            class="input input-bordered" />
+                    </div>
+                    <div class="modal-action">
+                        <button class="btn btn-primary" type="submit">Salvar</button>
+                        <label for="edit-modal" class="btn">Fechar</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@end

@@ -1,0 +1,185 @@
+@layouts.app()
+@!navbar()
+<div class="flex justify-center">
+  <div class="p-12">
+    <div class="flex flex-col">
+      <h1 class="text-7xl font-bold py-7">{{ recipe.title }}</h1>
+      <p class="mb-8 text-3xl">
+        Preço Total:
+        <strong class="font-extrabold text-secondary">
+          R$ <span id="recipe-totalPrice">{{ recipe.totalPrice.toFixed(2) }}</span>
+        </strong>
+      </p>
+      <div class="flex justify-center">
+        <img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="w-full h-full object-cover rounded-lg" />
+      </div>
+      <div class="flex flex-col ps-6">
+        <h2 class="mt-4 text-lg font-bold">Descrição:</h2>
+        <p>{{ recipe.description }}</p>
+
+        <h2 class="mt-4 text-lg font-bold">Culinária:</h2>
+        <p>{{ recipe.cuisine }}</p>
+
+        <h2 class="mt-4 text-lg font-bold">Instruções:</h2>
+        <p class="mb-8">{{ recipe.instructions }}</p>
+
+        <div class="overflow-x-auto">
+          <table class="table">
+            <!-- Cabeçalho -->
+            <thead>
+              <tr>
+                <th>Ingredientes</th>
+                <th>Preço</th>
+                <th>Quantidade</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @each(ingredient in recipe.ingredients)
+              <tr>
+                <td>
+                  <div class="flex items-center gap-3">
+                    <div class="avatar">
+                      <div class="mask mask-squircle h-12 w-12">
+                        <img src="{{ ingredient.image }}" alt="{{ ingredient.name }}" />
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-bold">{{ ingredient.name }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="price" data-base-price="{{ ingredient.price }}">R$ {{ ingredient.price.toFixed(2) }}</td>
+                <td class="quantity-span" 
+                    data-id="{{ ingredient.id }}" 
+                    data-base-quantity="{{ ingredient.quantity }}" 
+                    data-unit="{{ ingredient.unit }}">
+                  {{ ingredient.quantity }} {{ ingredient.unit }}
+                </td>
+                <td class="total">R$ {{ ingredient.price.toFixed(2) * ingredient.quantity }}</td>
+              </tr>
+              @endeach
+            </tbody>
+            <tfoot>
+              <tr class="bg-base-200">
+                <th>Total</th>
+                <th></th>
+                <th>
+                  <div class="flex items-center space-x-2">
+                    <button class="btn btn-outline btn-error" onclick="updateTotalQuantity('decrement')">-</button>
+                    <span id="quantity-total" class="font-bold text-lg">1</span>
+                    <button class="btn btn-outline btn-success" onclick="updateTotalQuantity('increment')">+</button>
+                  </div>
+                </th>
+                <th id="totalPrice">R$ {{ recipe.totalPrice.toFixed(2) * 1.06}}</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Campo oculto para ID da receita -->
+    <input type="hidden" id="recipe-id" value="{{ recipe.id }}" />
+
+    <button class="btn m-8 btn-primary" onclick="addToCart()">Adicionar ao carrinho</button>
+    <dialog id="my_modal_3" class="modal">
+      <div class="modal-box">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <h3 class="text-lg font-bold">Já adicionamos ao seu carrinho!</h3>
+        <div class="divider"></div>
+        <p class="text-2xl font-bold text-center m-4">{{ recipe.title }}</p>
+        <div class="divider"></div>
+        <div class="">
+          <a class="btn max-w-48 btn-outline btn-secondary" href="{{ route('recipes.index') }}">
+            Continuar comprando
+          </a>
+          <a class="btn max-w-48 btn-secondary" href="{{ route('cart.index') }}">
+            Ir para o carrinho
+          </a>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</div>
+
+<script>
+  let totalQuantity = 1;
+
+  function updateTotalQuantity(action) {
+    if (action === 'increment') {
+      totalQuantity++;
+    } else if (action === 'decrement' && totalQuantity > 1) {
+      totalQuantity--;
+    }
+
+    document.getElementById('quantity-total').textContent = totalQuantity;
+    updateAllIngredients();
+  }
+  function updateAllIngredients() {
+  let totalPrice = 0;
+
+  const ingredients = document.querySelectorAll('tbody tr');
+  ingredients.forEach((ingredientRow) => {
+    const priceElement = ingredientRow.querySelector('.price');
+    const quantityElement = ingredientRow.querySelector('.quantity-span');
+    const totalElement = ingredientRow.querySelector('.total');
+
+    const baseQuantity = parseFloat(quantityElement.getAttribute('data-base-quantity'));
+    const unitPrice = parseFloat(priceElement.getAttribute('data-base-price'));
+
+    // Calcula a nova quantidade total considerando o totalQuantity
+    const newQuantity = baseQuantity * totalQuantity;
+
+    // Calcula o preço total do ingrediente considerando a nova quantidade
+    const totalIngredientPrice = newQuantity * unitPrice;
+
+    // Atualiza os valores no DOM
+    quantityElement.textContent = `${newQuantity} ${quantityElement.getAttribute('data-unit')}`;
+    totalElement.textContent = `R$ ${totalIngredientPrice.toFixed(2)}`;
+
+    // Acumula o total geral
+    totalPrice += totalIngredientPrice * 1.06;
+  });
+
+  // Atualiza o preço total geral no DOM
+  document.getElementById('totalPrice').textContent = `R$ ${totalPrice.toFixed(2)}`;
+  document.getElementById('recipe-totalPrice').textContent = totalPrice.toFixed(2);
+}
+
+
+  async function addToCart() {
+    const recipeId = parseInt(document.getElementById('recipe-id').value); // ID da receita
+    const quantity = totalQuantity; // Quantidade da receita selecionada pelo usuário
+
+    if (!recipeId || quantity <= 0) {
+      console.error('Dados inválidos: recipeId ou quantity não definidos corretamente.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/cart/store`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          recipe: { id: recipeId, quantity },
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Receita adicionada ao carrinho com sucesso!');
+        const modal = document.getElementById('my_modal_3');
+        if (modal) modal.showModal(); // Mostra o modal
+      } else {
+        console.error('Erro ao adicionar receita ao carrinho');
+      }
+    } catch (error) {
+      console.error('Erro ao enviar requisição:', error);
+    }
+  }
+</script>
+@end

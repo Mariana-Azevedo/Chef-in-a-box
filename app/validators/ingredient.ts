@@ -7,7 +7,6 @@ export const createIngredientValidator = vine.compile(
         unit: vine.string().trim(),
         price: vine.number(),
         image: vine.string().trim(),
-        imageType: vine.string().trim(),
         quantity: vine.number(),
     })
   )

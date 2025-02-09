@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Chef in a box</title>
-    @vite(['resources/js/app.js', 'resources/css/app.css'])
 
-  </head>
-  <body>
-    <section>
+<head>
+  <title>Chef in a box</title>
+  @vite(['resources/js/app.js', 'resources/css/app.css'])
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+
+<body>
+  <section>
+    <div>
+      @include('components/layouts/partials/header')
       <div>
-        @include('components/layouts/partials/header')
-        <div >
-          {{{ await $slots.main() }}}
-        </div>
+        {{{ await $slots.main() }}}
       </div>
-    </section>
-  </body>
+    </div>
+  </section>
+  
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="/js/home.js"></script>
+</body>
+
 </html>

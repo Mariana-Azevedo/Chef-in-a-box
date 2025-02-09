@@ -7,10 +7,10 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
       table.string('title')
-      table.string("image")
+      table.string("description")
       table.string("instructions")
       table.string("cuisine")
-      table.string('image_type')
+      table.string("image")
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

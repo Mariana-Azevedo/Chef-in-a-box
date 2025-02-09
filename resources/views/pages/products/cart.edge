@@ -1,0 +1,128 @@
+@layouts.app()
+@!navbar()
+<div class="flex justify-center m-8">
+  <h1 class="text-5xl bold font-semibold">Seu carrinho</h1>
+</div>
+<div class="flex justify-between px-8 min-w-full ">
+  <div class="overflow-x-auto w-3/5">
+    <p class="mb-8">
+      Não está pronto para finalizar sua compra?
+      <a class="font-semibold underline" href="{{ route('recipes.index') }}">Continue comprando</a>
+    </p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Receita</th>
+          <th></th>
+          <th></th>
+          <th>Ingredientes</th>
+          <th>Preço</th>
+          <th>Quantidade</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        @each(recipe in recipesCart)
+        @each(ingredient in recipe.ingredients)
+        <tr>
+          <td>{{ recipe.title }} {{--{{recipe.image}} --}}
+          </td>
+          <td></td>
+          <td></td>
+          <td>{{ ingredient.name }}</td>
+          <td>R${{ ingredient.price }}</td>
+          <td>{{ recipe.quantity * ingredient.quantity }} {{ ingredient.unit }}</td>
+
+          <td>R$ {{ ingredient.price * ingredient.quantity * recipe.quantity}}</td>
+        </tr>
+        @end
+        @end
+      </tbody>
+      <tfoot>
+        <tr class="bg-base-200">
+          <th>Total</th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th id="totalPrice">R$ {{ totalPrice}}</th>
+
+        </tr>
+      </tfoot>
+    </table>
+
+    {{-- <form method="POST" action="{{ route('cart.update') }}?_method=PUT">
+      <button type="submit" class="btn btn-outline btn-accent">Atualizar carrinho</button>
+    </form> --}}
+    <form method="POST" action="{{ route('cart.destroy') }}?_method=PUT">
+      <div class="flex mt-6">
+        <button class="btn btn-primary">Apagar</button>
+      </div>
+    </form>
+
+
+
+    {{-- <button class="btn" onclick="my_modal_1.showModal()">open modal</button>
+    <dialog id="my_modal_1" class="modal">
+      <div class="modal-box">
+        <p class="flex justify-center py-4">Você quer remover esse produto?</p>
+        <div class="flex justify-center modal-action">
+          <form method="dialog">
+            <button class="btn">Não</button>
+            <button class="btn">Sim</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+    --}}
+  </div>
+
+  <!-- Seção do Resumo da Compra -->
+  <div class="w-1/3">
+    <div class="card bg-base-300 text-neutral-content w-96">
+      <div class="card-body items-center text-center text-black">
+        <h2 class="card-title">Resumo da compra</h2>
+        <div class="divider"></div>
+        <div class="flex flex-col justify-between min-w-full text-lg">
+          <div class="flex flex-row">
+            <p class="flex justify-start">Sub-total</p>
+            <p class="flex justify-end font-semibold	">{{ totalPrice}}</p>
+          </div>
+          <div class="flex flex-row">
+            <p class="flex justify-start">Frete</p>
+            <p class="flex justify-end">Gratuito</p>
+          </div>
+          <div class="divider"></div>
+          <div class="flex flex-row text-2xl">
+            <p class="flex justify-start">Total</p>
+            <p class="flex justify-end font-extrabold">{{ totalPrice}}</p>
+          </div>
+        </div>
+        <form method="POST" action="{{ route('cart.payment') }}">
+          <div class="card-actions justify-end min-w-80">
+            <button class="btn btn-success mt-6 min-w-full row" onclick="my_modal_5.showModal()">Finalizar a
+              compra</button>
+            <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
+              <div class="modal-box">
+                <p class="py-4">Compra realizada com sucesso!</p>
+                <div class="modal-action">
+                  <form method="dialog">
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
+          </div>
+        </form>
+
+        <!-- Open the modal using ID.showModal() method -->
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+@end

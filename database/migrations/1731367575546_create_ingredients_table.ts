@@ -10,6 +10,7 @@ export default class extends BaseSchema {
       table.string('description')
       table.string('unit')
       table.decimal('price')
+      table.string('image')
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

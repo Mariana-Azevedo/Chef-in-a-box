@@ -1,6 +1,6 @@
 <label class="form-control w-full max-w-xs">
   <div class="label">
-    <span class="label-text">Nome</span>
+    <span class="label-text">{{ label }}</span>
   </div>
-  <input type="text" name="fullName" placeholder="Type here" class="input input-bordered w-full max-w-xs required" />
+  <input type="text" name="fullName" placeholder="Type here" class="input input-bordered w-full max-w-xs required {{ sizeClass }}" {{ method ? `method="${method}"` : '' }} />
 </label>

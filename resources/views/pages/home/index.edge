@@ -1,0 +1,68 @@
+@layouts.app()
+@!navbar()
+<div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold text-center mb-6">Lista de Receitas</h1>
+
+    {{--  <form method="GET" action="{{ route('recipes.index') }}" class="flex justify-center mb-8">
+        <input type="text" name="title" placeholder="Buscar receita pelo título..."
+            class="input input-bordered w-1/3 mr-4" />
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>  --}}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @each(recipe in recipes)
+        <div onclick="window.location.href='{{ route('recipes.show', { id: recipe.id }) }}'" class="bg-white rounded-lg shadow-md overflow-hidden group relative">
+            <!-- Image -->
+            <div class="relative">
+                <img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="w-full h-48 object-cover" />
+                <!-- Line Animation -->
+                <div class="absolute bottom-0 left-0 w-0 h-1 bg-red-500 transition-all duration-300 group-hover:w-full"></div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="p-4 relative">
+                <!-- Cart and Favorite Buttons in the Top Right -->
+                <div class="absolute top-4 right-4 flex space-x-4">
+
+                </div>
+
+                <!-- Title and Description -->
+                <h2 class="text-xl font-bold mb-2 mb-8">{{ recipe.title }}</h2>
+                <p class="text-gray-700 text-sm mb-4">{{ recipe.description }}</p>
+                <p class="text-green-600 font-semibold">
+                    Preço Total: R$ {{ recipe.totalPrice.toFixed(2) }}
+                </p>
+            </div>
+        </div>
+        @endeach
+    </div>
+
+    <div class="mt-8">
+        <nav class="flex justify-center space-x-4">
+            @if(recipes.previousPage)
+            <a href="?page={{ recipes.previousPage }}" class="btn btn-outline btn-sm">
+                Anterior
+            </a>
+            @endif
+
+            @if(recipes.nextPage)
+            <a href="?page={{ recipes.nextPage }}" class="btn btn-outline btn-sm">
+                Próximo
+            </a>
+            @endif
+        </nav>
+    </div>
+    <div class="flex justify-center join">
+        <input
+          class="join-item btn btn-square"
+          type="radio"
+          name="options"
+          aria-label="1"
+          checked="checked" />
+        <input class="join-item btn btn-square" type="radio" name="options" aria-label="2" />
+        <input class="join-item btn btn-square" type="radio" name="options" aria-label="3" />
+        <input class="join-item btn btn-square" type="radio" name="options" aria-label="4" />
+    </div>
+    
+</div>
+@end

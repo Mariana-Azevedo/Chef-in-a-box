@@ -13,7 +13,7 @@ export default class SilentAuthMiddleware {
     next: NextFn,
   ) {
     await ctx.auth.check()
-
+ 
     return next()
   }
 }

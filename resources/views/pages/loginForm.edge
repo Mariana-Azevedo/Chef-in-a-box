@@ -1,42 +1,42 @@
 @layouts.app()
 <div class="hero bg-base-200 min-h-screen">
   <div class="hero-content flex-col  w-5/6 lg:flex-colum-reverse">
-      <div class="text-center lg:text-left">
-        @!login.titulo({label: 'Faça o seu login'}) 
-          @!login.texto({label: ' Digite seus dados nos campos abaixo.'})
-      </div>
-      <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-  @login.form({
+    <div class="text-center lg:text-left">
+      @!login.titulo({label: 'Faça o seu login'})
+      @!login.texto({label: ' Digite seus dados nos campos abaixo.'})
+    </div>
+    <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+      @login.form({
       action: route('auth.store'),
       method: 'POST',
       class: 'space-y-6'
-    }) 
-    <div class="form-control">
-      <label class="label">
-        <span class="label-text">Email</span>
-      </label>
-    </div>
-    <div class="form-control">
-      @!login.emailInput()
-    </div>
-    <div class="form-control">
-      <label class="label">
-        <span class="label-text">Senha</span>
-      </label>
-      @!login.senha()
-    </div>
-            <label class="label">
-              <a href="#" class="label-text-alt link link-hover">Esqueceu sua senha?</a>
-            </label>
-          </div>
-          <div class="form-control mt-6">
-            {{--  <button class="btn btn-primary">Login</button>  --}}
-            @!button({ label: 'Login', colorClass: 'btn-primary' })
-          </div>         
-          <a class="link link-primary" href="{{ route('users.create') }}"> Não tem conta? Criar conta</a>
-        </form>
+      })
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Email</span>
+        </label>
       </div>
+      <div class="form-control">
+        @!login.emailInput()
+      </div>
+      <div class="form-control">
+        <label class="label">
+          <span class="label-text">Senha</span>
+        </label>
+        @!login.senha()
+      </div>
+      <div class="form-control mt-6">
+        {{-- <button class="btn btn-primary">Login</button> --}}
+        @!button({ label: 'Login', colorClass: 'btn-primary' })
+      </div>
+      <a class="link link-primary" href="{{ route('users.create') }}"> Não tem conta? Criar conta</a>
     </div>
+    </form>
   </div>
- @end
+</div>
+@if(auth.isAuthenticated)
+@!login.toast({label: 'Logado com sucesso'})
+@end
+</div>
+@end
 @end

@@ -1,9 +1,9 @@
 @if(!href)
-<button type="submit" class="btn {{ sizeClass }} {{typeClass}} {{colorClass}}">
+<button type="submit" href="{{ href }}" class="btn {{ sizeClass }} {{typeClass}} {{colorClass}} {{extraClass}}">
     {{ label }}
 </button>
 @else
-<a class="btn" href="{{ href }}">
+<a class="btn btn-outline rounded-full text-white border-white hover:bg-base-200 hover:text-primary focus:outline-none focus:ring-0" href="{{ href }}">
     {{{ await $slots.main() }}}
 </a>
 @end

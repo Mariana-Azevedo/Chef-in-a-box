@@ -1,52 +1,69 @@
-<div class="navbar bg-primary text-white py-6">
+<div class="navbar bg-primary font-semibold text-white py-6">
   <div class="navbar-start">
     <div class="dropdown">
-      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h8m-8 6h16" />
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
         </svg>
       </div>
-      <ul
-        tabindex="0"
-        class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-        <li><a>Item 1</a></li>
-        <li>
-          <a>Parent</a>
-          <ul class="p-2">
-            <li><a>Submenu 1</a></li>
-            <li><a>Submenu 2</a></li>
-          </ul>
-        </li>
-        <li><a>Item 3</a></li>
+      <ul tabindex="0"
+        class="menu menu-sm dropdown-content text-black bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+        <li><a href="{{ route('home.show') }}"> Home </a></li>
+        <li><a href="{{ route('recipes.index')}}"> Receitas </a></li>
+        @if(auth.user && auth.user.admin)
+        <li><a href="{{ route('recipes.create') }}">Criar receitas</a></li>
+        <li><a href="{{ route('recipes.stock')}}">Estoque </a></li>
+        @end  
+        {{-- <li><a href="{{ route('users.admin')}}">Admin</a></li> --}}
       </ul>
     </div>
-    <img class="mask mask-squircle" src="../components/img/Imagem do WhatsApp de 2024-10-17 à(s) 21.32.59_5049e006.jpg" />
   </div>
-  <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal px-1">
-      <li><a>Sobre</a></li>
-      <li>
-        <details>
-          <summary>Menu</summary>
-          <ul class="p-2">
-            <li><a>Submenu 1</a></li>
-            <li><a>Submenu 2</a></li>
-          </ul>
-        </details>
-      </li>
-      <li><a>Contato</a></li>
-    </ul>
+  <div class="navbar-center">
+    <a href="{{ route('home.show') }}" class="btn btn-ghost text-xl">Chef In a Box</a>
   </div>
-  <div class="navbar-end">
-    <a class="btn">Sair</a>
+  <div class="navbar-end flex items-center space-x-4">
+    <!-- Carrinho -->
+    @if(auth.isAuthenticated)
+    <a href="{{ route('cart.index') }}" class="btn btn-ghost btn-circle">
+      <div class="indicator">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      </div>
+    </a>
+    @endif
+
+    <!-- Foto de perfil do usuário -->
+    @if(auth.isAuthenticated)
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+        <div class="w-10 rounded-full">
+          <img alt="Tailwind CSS Navbar component"
+            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+        </div>
+      </div>
+      <ul tabindex="0"
+        class="menu menu-sm text-black dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+        <li>
+          <a class="justify-between" href="{{ route('users.profile', { id: auth.user.id }) }}">
+            Perfil
+          </a>
+        </li>
+        <li><a href="{{ route('auth.destroy') }}" onclick="handleLogout(event)">Logout</a></li>
+      </ul>
+    </div>
+    @else
+    @button({
+    href: route('auth.create'),
+    })
+    Login
+    @end
+    @button({
+    href: route('users.create'),
+    })
+    Sign in
+    @end
+    @endif
   </div>
 </div>

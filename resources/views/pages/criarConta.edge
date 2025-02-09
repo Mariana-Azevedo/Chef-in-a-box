@@ -12,7 +12,7 @@
       class: 'space-y-6',
       })
       <div class="form-control">
-        @!login.input()
+        @!login.input({ label: 'Nome'})
         <label class="label">
           <span class="label-text">Email</span>
         </label>
@@ -37,4 +37,19 @@
     @end
   </div>
 </div>
+{{--  <div class="toast toast-end">
+  @if (session.flashMessages.get('success'))
+    <div class="alert alert-success">
+      <span>{{ session.flashMessages.get('success') }}</span>
+    </div>
+  @endif
+  @if (session.flashMessages.get('error'))
+    <div class="alert alert-error">
+      <span>{{ session.flashMessages.get('error') }}</span>
+    </div>
+  @endif
+</div>
+
+ --}}
+
 @end

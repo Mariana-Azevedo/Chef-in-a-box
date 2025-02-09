@@ -3,6 +3,7 @@ import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 import Recipe from './recipe.js'
 
+
 export default class Ingredient extends BaseModel {
 
     @column({ isPrimary: true })
@@ -32,6 +33,8 @@ export default class Ingredient extends BaseModel {
     })
     declare recipes: ManyToMany<typeof Recipe>
 
+    @column()
+    declare stock: number
     @column.dateTime({ autoCreate: true })
     declare createdAt: DateTime
 

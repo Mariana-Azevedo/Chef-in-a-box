@@ -1,0 +1,144 @@
+@layouts.app()
+@!navbar()
+<div class="container mx-auto p-8">
+  <h1 class="text-5xl font-bold m-6 ">Criar receita</h1>
+  <form action="{{ route('recipes.store') }}" method="POST" class="space-y-6">
+
+    <div class="grid ml-12 justify-items-stretch">
+      @!inputGeral({
+        label: 'Título', 
+        type: 'text', 
+        name: 'title', 
+        placeholder: 'Digite o título da receita' 
+      } )
+
+      {{--  <label class="form-control">
+        <div class="label">
+          <span class="label-text">Instruções</span>
+        </div>
+        <textarea name="instructions" class="textarea textarea-bordered h-24 w-96" placeholder="Bio"></textarea>
+      </label>  --}}
+      @!inputGeral({
+        label: 'Descrição', 
+        type: 'text', 
+        name: 'description', 
+        placeholder: 'Digite as descrição da receita'
+      } )
+
+      @!inputGeral({
+        label: 'Instruções', 
+        type: 'text', 
+        name: 'instructions', 
+        placeholder: 'Digite as instruções da receita'
+      } )
+
+      @!inputGeral({
+        label: 'Culinária', 
+        type: 'text', 
+        name: 'cuisine', 
+        placeholder: 'Italiana, Brasileira ...'
+      })
+
+      @!inputGeral({
+        label: 'Imagem', 
+        type: 'text', 
+        name: 'image', 
+        placeholder: 'URL'
+      })
+
+
+      <!-- Open the modal using ID.showModal() method -->
+
+      <div class="form-control">
+        @!inputGeral({
+          label: 'Quantos ingredientes?', 
+          type: 'number', 
+          name: 'qtd', 
+          placeholder: 'Quantidade',
+          id: 'ingredientCount'
+        })
+        
+        <button type="button" id="generateIngredients" class="btn btn-primary max-w-80 mt-4">
+          Adicionar Ingredientes
+        </button>
+      </div>
+
+      <!-- Ingredientes Dinâmicos -->
+      <div id="ingredientsContainer" class="space-y-4 mt-2">
+        <!-- Campos de ingredientes serão gerados aqui -->
+      </div>
+
+      <!-- Botão para criar receita -->
+      <div class="form-control max-w-80 mt-6">
+        <button type="submit" class="btn btn-success">Criar Receita</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+  document.getElementById('generateIngredients').addEventListener('click', () => {
+    const container = document.getElementById('ingredientsContainer');
+    const ingredientCount = parseInt(document.getElementById('ingredientCount').value);
+
+    // Limpa os ingredientes existentes
+    container.innerHTML = '';
+
+    if (isNaN(ingredientCount) || ingredientCount <= 0) {
+      alert('Por favor, insira um número válido de ingredientes.');
+      return;
+    }
+
+    // Gera os campos de formulário para os ingredientes
+    for (let i = 1; i <= ingredientCount; i++) {
+      const ingredientDiv = document.createElement('div');
+      ingredientDiv.classList.add('form-control', 'border', 'p-4', 'rounded');
+
+      ingredientDiv.innerHTML = `
+      @!inputGeral({
+        label: 'Ingrediente ${i}', 
+        type: 'text', 
+        name: 'ingredients[${i}][name]', 
+        placeholder: 'Nome do ingrediente'
+      })
+
+       @!inputGeral({
+        label: 'Descrição ${i}', 
+        type: 'text', 
+        name: 'ingredients[${i}][description]', 
+        placeholder: 'Descrição'
+      })
+
+       @!inputGeral({
+        label: 'Unidade ${i}', 
+        type: 'text', 
+        name: 'ingredients[${i}][unit]', 
+        placeholder: 'kg, g'
+      })
+
+       @!inputGeral({
+        label: 'Preço ${i}', 
+        type: 'number', 
+        name: 'ingredients[${i}][price]', 
+        placeholder: 'Preço'
+      })
+
+      @!inputGeral({
+        label: 'Imagem ${i}', 
+        type: 'text', 
+        name: 'ingredients[${i}][image]', 
+        placeholder: 'URL'
+      })
+      
+       @!inputGeral({
+        label: 'Quantidade ${i}', 
+        type: 'number', 
+        name: 'ingredients[${i}][quantity]', 
+        placeholder: 'Quantidade'
+      })
+      `;
+
+      container.appendChild(ingredientDiv);
+    }
+  });
+</script>
+@end
